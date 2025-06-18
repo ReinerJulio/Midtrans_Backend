@@ -57,9 +57,12 @@ app.post('/api/create-payment', async (req, res) => {
             redirect_url: transaction.redirect_url
         });
     } catch (error) {
-        console.error('Error creating payment:', error);
-        res.status(500).json({ error: 'Failed to create payment' });
-    }
+  console.error('❌ Midtrans error:', error?.ApiResponse || error?.response?.data || error.message);
+  res.status(500).json({
+    error: 'Failed to create payment',
+    detail: error?.ApiResponse || error?.response?.data || error.message
+  });
+}
 });
 
 // Check payment status
