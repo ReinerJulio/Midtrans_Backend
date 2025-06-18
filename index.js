@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Midtrans Configuration (gunakan variabel .env yang benar)
 const snap = new midtransClient.Snap({
-    isProduction: false, // Ganti ke true di production
+    isProduction: true, // Ganti ke true di production
     serverKey: process.env.MIDTRANS_SERVER_KEY,
     clientKey: process.env.MIDTRANS_CLIENT_KEY
 });
