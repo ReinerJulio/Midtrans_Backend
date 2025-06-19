@@ -18,7 +18,7 @@ const snap = new midtransClient.Snap({
 });
 
 const coreApi = new midtransClient.CoreApi({
-    isProduction: false,
+    isProduction: true, // Ganti ke true di production
     serverKey: process.env.MIDTRANS_SERVER_KEY,
     clientKey: process.env.MIDTRANS_CLIENT_KEY
 });
@@ -27,6 +27,10 @@ const coreApi = new midtransClient.CoreApi({
 app.post('/api/create-payment', async (req, res) => {
     try {
         const { order_id, amount, email, package } = req.body;
+
+        if (!order_id) {
+            return res.status(400).json({ error: "Missing order_id" });
+        }
 
         const parameter = {
             transaction_details: {
@@ -54,7 +58,8 @@ app.post('/api/create-payment', async (req, res) => {
         const transaction = await snap.createTransaction(parameter);
         res.json({
             token: transaction.token,
-            redirect_url: transaction.redirect_url
+            redirect_url: transaction.redirect_url,
+            order_id: parameter.transaction_details.order_id
         });
     } catch (error) {
   console.error('❌ Midtrans error:', error?.ApiResponse || error?.response?.data || error.message);
